@@ -16,8 +16,6 @@ class App extends Component {
       monster: [],
       searchField: ''
     }
-
-    // this.handleChange = this.handleChange.bind(this);
   }
 
   //lifeCycleMethod
@@ -29,47 +27,33 @@ class App extends Component {
         .then(users => this.setState({ monster: users }))
   }
 
+    render() {
 
-  //messa qui in questo modo da errore a causa dello scope di this, per fare in modo che this sia visibile
-  //bisogna nel costructor usare il bind
+        //questo modo di scrivere equivale a:
+        // const monster = this.state.monster
+        // const searchField = this.state.searchField
+        const { monster, searchField } = this.state;
 
-  // handleChange(e) {
-  //   this.setState({ searchField: e.target.value });
-  // }
+        //posso a questo punto dichiarare una nuova variabile
 
-  handleChange = e => {
-    this.setState({ searchField: e.target.value })
-  };
+        const filteredMonsters = monster.filter(monster =>
+            monster.name.toLowerCase().includes(searchField.toLowerCase())
+        );
 
+        // che passerò al componente CardList a questo punto invece di passargli this.stat.monster gli passo la nuova costante filteredMonsters
 
-  render() {
-
-      //questo modo di scrivere equivale a:
-      // const monster = this.state.monster
-      // const searchField = this.state.searchField
-      const { monster, searchField } = this.state;
-
-      //posso a questo punto dichiarare una nuova variabile
-
-      const filteredMonsters = monster.filter(monster =>
-          monster.name.toLowerCase().includes(searchField.toLowerCase())
-      );
-
-      // che passerò al componente CardList a questo punto invece di passargli this.stat.monster gli passo la nuova costante filteredMonsters
-
-      return (
-          <div className='App'>
-            <h1> Monster Rolodex </h1>
-            <SearchBox
-                placeholder='search monsters'
-                handleChanges = {this.handleChange}
-            />
-            <CardList
-                monster={filteredMonsters}>
-            </CardList>
-          </div>
-      )
-  }
+        return (
+            <div className='App'>
+              <SearchBox
+                  placeholder='search monsters'
+                  handleChanges = {e => this.setState({ searchField: e.target.value } , () => console.log(this.state.searchField)) }
+              />
+              <CardList
+                  monster={filteredMonsters}>
+              </CardList>
+            </div>
+        )
+    }
 
 
 
